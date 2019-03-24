@@ -3,12 +3,15 @@ services:
   mailhog:
     restart: "no"
     image: mailhog/mailhog:latest
+    # container_name must be used to target this container with the traefik labels
     container_name: mail-${instance}-${project}
     expose:
       - "8025"
     labels:
       - "traefik.http.routers.mail-${instance}-${project}.rule=HostRegexp(`mail.${instance}.${project}.localhost`)"
+      # rules are sorted by length, without manual priority, the other container would get all requests
       - "traefik.http.routers.mail-${instance}-${project}.priority=1000"
+      # mailhog runs on a different port
       - "traefik.http.services.mail-${instance}-${project}.loadbalancer.server.port=8025"
     networks:
       - web
