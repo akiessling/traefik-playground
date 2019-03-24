@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+  myservice:
+    restart: "no"
+    image: php:7.3.3-apache-stretch
+    container_name: ${instance}_${project}_web
+    volumes:
+       - "./:/var/www/"
+    expose:
+      - "80"
+    labels:
+      - "traefik.http.routers.${instance}-${project}.rule=Host(`${instance}.${project}.localhost`)"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

@@ -1,0 +1,30 @@
+version: '3.5'
+services:
+  mailhog:
+    restart: "no"
+    image: mailhog/mailhog:latest
+    container_name: mail-${instance}-${project}
+    expose:
+      - "8025"
+    labels:
+      - "traefik.http.routers.mail-${instance}-${project}.rule=HostRegexp(`mail.${instance}.${project}.localhost`)"
+      - "traefik.http.routers.mail-${instance}-${project}.priority=1000"
+      - "traefik.http.services.mail-${instance}-${project}.loadbalancer.server.port=8025"
+    networks:
+      - web
+  myservice:
+    restart: "no"
+    image: php:7.2.16-apache-stretch
+    container_name: ${instance}_${project}_web
+    volumes:
+       - "./:/var/www/"
+    expose:
+      - "80"
+    labels:
+      - "traefik.http.routers.${instance}-${project}.rule=HostRegexp(`{subdomain:.+}.${instance}.${project}.localhost`, `${instance}.${project}.localhost`)"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

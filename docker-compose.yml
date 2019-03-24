@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  traefik:
+    #image: traefik:latest
+    image: traefik:2.0.0-alpha2
+    command: --api --providers.docker
+    restart: "no"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+      - ./acme.json:/acme.json
+    container_name: traefik
+  whoami:
+    image: containous/whoami # A container that exposes an API to show its IP address
+    networks:
+      - web
+    labels:
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+networks:
+  web:
+    external: true
