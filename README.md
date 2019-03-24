@@ -1,7 +1,7 @@
 # Playground for a traefik.io setup
 
 ## Setup
-Add the domains to your /etc/hosts file (or configure some load balancer etc. for that)
+Add the domains to your /etc/hosts file (or configure dnsmasq etc. for that)
 ~~~
 127.0.0.1 test.traefiktest.localhost
 127.0.0.1 test2.traefiktest.localhost sub.test2.traefiktest.localhost mail.test2.traefiktest.localhost whoami.docker.localhost
